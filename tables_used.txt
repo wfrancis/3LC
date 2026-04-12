@@ -1,0 +1,2 @@
+train_url=/Users/william/Library/Application Support/3LC/projects/ua_detrac_vehicle_detection/datasets/ua_detrac_10k/tables/ua_detrac_10k-train
+val_url=/Users/william/Library/Application Support/3LC/projects/ua_detrac_vehicle_detection/datasets/ua_detrac_10k/tables/ua_detrac_10k-val
