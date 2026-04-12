@@ -115,6 +115,8 @@ KAGGLE_INPUT = None
 for candidate in [
     kaggle_base / "3-lc-multi-vehicle-detection-challenge",
     kaggle_base / "3lc-multi-vehicle-detection-challenge",
+    kaggle_base / "competitions" / "3-lc-multi-vehicle-detection-challenge",
+    kaggle_base / "competitions" / "3lc-multi-vehicle-detection-challenge",
 ]:
     if candidate.exists():
         KAGGLE_INPUT = candidate
@@ -143,6 +145,14 @@ if KAGGLE_INPUT is None:
 
 print(f"  Found competition data at: {KAGGLE_INPUT}")
 print(f"  Contents: {[p.name for p in KAGGLE_INPUT.iterdir()]}")
+
+# Handle competition_starter/ nesting
+if not (KAGGLE_INPUT / "train").exists() and (KAGGLE_INPUT / "competition_starter").exists():
+    KAGGLE_INPUT = KAGGLE_INPUT / "competition_starter"
+    print(f"  Adjusted to: {KAGGLE_INPUT}")
+if not (KAGGLE_INPUT / "train").exists() and (KAGGLE_INPUT / "data").exists():
+    KAGGLE_INPUT = KAGGLE_INPUT / "data"
+    print(f"  Adjusted to: {KAGGLE_INPUT}")
 
 for split in ("train", "val", "test"):
     src_images = find_split_dir(KAGGLE_INPUT, split, "images")
