@@ -35,8 +35,8 @@ import sys
 def install(pkg):
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", pkg])
 
-# Use plain ultralytics (not 3lc-ultralytics) to avoid compatibility issues
-install("ultralytics")
+# Pin ultralytics to version compatible with Kaggle's PyTorch
+install("ultralytics==8.3.40")
 
 print("Packages installed.")
 
