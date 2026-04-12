@@ -91,6 +91,12 @@ id,image_id,prediction_string
 
 ---
 
+## Core Philosophy
+
+**Ultra fast ruthless iteration.** The faster we can iterate, the better we will do. Every tool, every script, every decision should optimize for cycle time. One more iteration beats one more hour of analysis. Ship fast, measure, fix, repeat.
+
+---
+
 ## Workflow Orchestration
 
 ### 1. Plan Mode Default
