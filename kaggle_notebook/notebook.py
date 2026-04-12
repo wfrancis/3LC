@@ -98,12 +98,51 @@ def find_split_dir(base, split, subdir):
             return matches[0]
     return direct  # fallback, will error with clear message
 
-print(f"  Scanning Kaggle input at: {KAGGLE_INPUT}")
-print(f"  Contents: {[p.name for p in KAGGLE_INPUT.iterdir()] if KAGGLE_INPUT.exists() else 'NOT FOUND'}")
-# Also check one level deeper
-for sub in KAGGLE_INPUT.iterdir():
-    if sub.is_dir():
-        print(f"    {sub.name}/: {[p.name for p in sub.iterdir()][:10]}")
+# List everything in /kaggle/input to find the actual data path
+kaggle_base = Path("/kaggle/input")
+print(f"  Scanning /kaggle/input/:")
+if kaggle_base.exists():
+    for item in sorted(kaggle_base.iterdir()):
+        print(f"    {item.name}/ ({len(list(item.iterdir())) if item.is_dir() else 'file'})")
+        if item.is_dir():
+            for sub in sorted(item.iterdir())[:15]:
+                print(f"      {sub.name}/ ({len(list(sub.iterdir())) if sub.is_dir() else 'file'})")
+else:
+    print("    /kaggle/input/ does not exist!")
+
+# Auto-detect the competition data root
+KAGGLE_INPUT = None
+for candidate in [
+    kaggle_base / "3-lc-multi-vehicle-detection-challenge",
+    kaggle_base / "3lc-multi-vehicle-detection-challenge",
+]:
+    if candidate.exists():
+        KAGGLE_INPUT = candidate
+        break
+
+# If not found by name, find any directory containing train/images
+if KAGGLE_INPUT is None:
+    for item in kaggle_base.iterdir():
+        if item.is_dir():
+            if (item / "train" / "images").exists():
+                KAGGLE_INPUT = item
+                break
+            # Check one level deeper
+            for sub in item.iterdir():
+                if sub.is_dir() and (sub / "train" / "images").exists():
+                    KAGGLE_INPUT = sub
+                    break
+            if KAGGLE_INPUT:
+                break
+
+if KAGGLE_INPUT is None:
+    raise FileNotFoundError(
+        "Could not find competition data under /kaggle/input/. "
+        "Make sure the competition dataset is attached to the notebook."
+    )
+
+print(f"  Found competition data at: {KAGGLE_INPUT}")
+print(f"  Contents: {[p.name for p in KAGGLE_INPUT.iterdir()]}")
 
 for split in ("train", "val", "test"):
     src_images = find_split_dir(KAGGLE_INPUT, split, "images")
