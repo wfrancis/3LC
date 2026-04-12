@@ -1,0 +1,64 @@
+# =============================================================================
+# UA-DETRAC competition starter 
+# All scripts read paths and hyperparameters from this file.
+# =============================================================================
+
+paths:
+  # Relative to the competition_starter/ folder (where this file lives)
+  dataset_yaml: dataset.yaml
+  sample_submission: sample_submission.csv
+  submission_csv: submission.csv
+  test_images: data/test/images
+  # Weights written under: {runs_detect_root}/{training.run_name}/weights/best.pt
+  runs_detect_root: runs/detect
+
+tlc:
+  project_name: ua_detrac_vehicle_detection
+  dataset_name: ua_detrac_10k
+  train_table_name: ua_detrac_10k-train # train table name is the name of the table containing the training data
+  val_table_name: ua_detrac_10k-val # val table name is the name of the table containing the validation data
+  image_embeddings_dim: 3 # image embeddings dim is the dimension of the image embeddings
+  image_embeddings_reducer: umap
+
+# Competition rule: architecture is YOLOv8n only.
+training:
+  model: yolov8n
+  run_name: yolov8n_baseline
+  run_description: Baseline YOLOv8n (train/val from 3LC tables)
+  epochs: 10 # epochs is the number of epochs to train for
+  batch_size: 16 # batch size is the number of images processed in parallel
+  image_size: 640 # image size is the size of the image to be processed
+  device: 0 # device is the device to be used for training
+  workers: 2 # workers is the number of workers to be used for training
+  lr0: 0.01 # lr0 is the initial learning rate
+  patience: 20 # patience is the number of epochs to wait for the validation loss to improve before stopping training
+  use_augmentation: true
+
+# --- CPU-only overrides (uncomment if you have NO GPU) ---
+# training:
+#   device: cpu        # force CPU (default: 0 = first GPU)
+#   epochs: 5          # fewer epochs to keep wall time reasonable (~2-3 h)
+#   batch_size: 8      # smaller batches for limited RAM
+#   workers: 0         # avoids multiprocessing overhead on CPU
+# tlc:
+#   image_embeddings_dim: 0  # skip embeddings (avoids umap-learn requirement)
+# predict:
+#   device: cpu
+# --- end CPU-only overrides ---
+
+reproducibility:
+  # Applied at the start of train.py (best-effort; full determinism also depends on CUDA)
+  seed: 42
+
+predict:
+  # null = auto-resolve runs/detect/{training.run_name}/weights/best.pt, else newest best.pt
+  weights: null
+  conf: 0.25 # conf is the confidence threshold for the detection
+  iou: 0.7 # iou is the intersection over union threshold for the detection
+  imgsz: null # imgsz is the size of the image to be processed
+  device: null # device is the device to be used for prediction
+  max_det: 300 # max_det is the maximum number of detections to be made
+  batch: 1 # batch is the batch size for the prediction
+  # memory = chunked predict (matches main repo; best on ~8GB GPUs). txt = save_txt pipeline.
+  pipeline: memory
+  pred_dir_name: predictions

@@ -32,9 +32,11 @@ def main():
     with open(args.config) as f:
         config = yaml.safe_load(f)
 
+    paths_cfg = config.get("paths", {})
+    training_cfg = config.get("training", {})
+
     # Find images directory
-    data_root = config.get("data_root", "data")
-    img_dir = Path(data_root) / args.split / "images"
+    img_dir = Path(f"data/{args.split}/images")
     if not img_dir.exists():
         print(f"ERROR: Image directory not found: {img_dir}")
         sys.exit(1)
@@ -42,14 +44,20 @@ def main():
     # Find weights
     weights = args.weights
     if weights is None:
-        runs_dir = Path("runs/detect")
-        if runs_dir.exists():
-            runs = sorted(runs_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)
-            for run in runs:
-                w = run / "weights" / "best.pt"
-                if w.exists():
-                    weights = str(w)
-                    break
+        runs_root = paths_cfg.get("runs_detect_root", "runs/detect")
+        run_name = training_cfg.get("run_name", "yolov8n_baseline")
+        primary = Path(runs_root) / run_name / "weights" / "best.pt"
+        if primary.exists():
+            weights = str(primary)
+        else:
+            runs_dir = Path(runs_root)
+            if runs_dir.exists():
+                runs = sorted(runs_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)
+                for run in runs:
+                    w = run / "weights" / "best.pt"
+                    if w.exists():
+                        weights = str(w)
+                        break
     if weights is None or not Path(weights).exists():
         print("ERROR: No weights found. Train first or specify --weights")
         sys.exit(1)

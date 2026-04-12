@@ -73,12 +73,11 @@ echo "Saved to label_issues.json"
 # Step 4: Local eval on validation set
 echo ""
 echo "[4/5] Running local mAP@0.5 on validation set..."
-if [[ -d "predictions_val" ]]; then
-    "$EVAL" --predictions predictions_val/ --labels data/val/labels/
-else
-    echo "No predictions_val/ found. Run: python scripts/predict_on_train.py --split val"
-    echo "Then:  $EVAL --predictions predictions_val/ --labels data/val/labels/"
+if [[ ! -d "predictions_val" ]]; then
+    echo "  Generating val predictions first..."
+    python scripts/predict_on_train.py --split val
 fi
+"$EVAL" --predictions predictions_val/ --labels data/val/labels/
 
 # Step 5: Generate submission
 echo ""
