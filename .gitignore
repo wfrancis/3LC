@@ -1,0 +1,24 @@
+# Rust build artifacts
+rust/target/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+3lc-env/
+
+# Competition data (large, download from Kaggle)
+data/
+runs/
+predictions_*/
+label_issues.json
+submission.csv
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
