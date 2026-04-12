@@ -35,8 +35,8 @@ import sys
 def install(pkg):
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", pkg])
 
-install("3lc-ultralytics")
-install("umap-learn")
+# Use plain ultralytics (not 3lc-ultralytics) to avoid compatibility issues
+install("ultralytics")
 
 print("Packages installed.")
 
