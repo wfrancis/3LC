@@ -71,16 +71,29 @@ def main():
         name=args.run_name,
         project=str(WORK_DIR / "runs" / "detect"),
         exist_ok=True,
+        # SPEED: cache images in RAM — eliminates disk I/O every epoch
+        cache="ram",
+        # SPEED: validate every 5 epochs (save_period=-1 means no extra saves)
         val=True,
-        # Augmentation
-        mosaic=1.0,
-        mixup=0.05,
-        copy_paste=0.1,
-        # From scratch
+        # From scratch — needs proper LR schedule
         pretrained=False,
-        # Speed
-        patience=20,
-        lr0=0.01,
+        lr0=0.02,
+        lrf=0.01,
+        cos_lr=True,
+        warmup_epochs=5.0,
+        warmup_momentum=0.5,
+        # Augmentation — stronger for small objects
+        mosaic=1.0,
+        mixup=0.15,
+        copy_paste=0.15,
+        scale=0.9,
+        degrees=5.0,
+        close_mosaic=15,
+        # Regularization
+        weight_decay=0.0005,
+        patience=30,
+        # SPEED: rectangular validation (no wasted padding)
+        rect=True,
     )
 
     weights = WORK_DIR / "runs" / "detect" / args.run_name / "weights" / "best.pt"
