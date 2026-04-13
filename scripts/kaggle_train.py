@@ -207,12 +207,24 @@ for split in ("train", "val", "test"):
     else:
         print(f"  {split}/labels already populated")
 
-# Copy sample_submission.csv
-sample_sub_src = KAGGLE_INPUT / "sample_submission.csv"
+# Copy sample_submission.csv (may be in KAGGLE_INPUT, parent, or grandparent)
 sample_sub_dst = WORK_DIR / "sample_submission.csv"
-if sample_sub_src.exists() and not sample_sub_dst.exists():
-    shutil.copy2(str(sample_sub_src), str(sample_sub_dst))
-    print(f"  Copied sample_submission.csv")
+if not sample_sub_dst.exists():
+    for search_dir in [KAGGLE_INPUT, KAGGLE_INPUT.parent, KAGGLE_INPUT.parent.parent,
+                       kaggle_base / "competitions" / "3-lc-multi-vehicle-detection-challenge"]:
+        candidate = search_dir / "sample_submission.csv"
+        if candidate.exists():
+            shutil.copy2(str(candidate), str(sample_sub_dst))
+            print(f"  Copied sample_submission.csv from {search_dir}")
+            break
+        # Also check inside competition_starter/
+        candidate2 = search_dir / "competition_starter" / "sample_submission.csv"
+        if candidate2.exists():
+            shutil.copy2(str(candidate2), str(sample_sub_dst))
+            print(f"  Copied sample_submission.csv from {candidate2.parent}")
+            break
+if not sample_sub_dst.exists():
+    print("  WARNING: sample_submission.csv not found!")
 
 print("Data setup complete.")
 
