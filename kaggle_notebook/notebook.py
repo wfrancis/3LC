@@ -40,6 +40,19 @@ install("ultralytics==8.3.40")
 
 print("Packages installed.")
 
+# Monkey-patch PyTorch CUDA device properties for compatibility
+# Kaggle's PyTorch uses 'total_memory' but newer ultralytics expects 'total_mem'
+import torch
+if torch.cuda.is_available():
+    props = torch.cuda.get_device_properties(0)
+    if not hasattr(props.__class__, 'total_mem') and hasattr(props, 'total_memory'):
+        torch._C._CudaDeviceProperties.total_mem = property(
+            lambda self: self.total_memory
+        )
+        print(f"Patched total_mem -> total_memory ({props.total_memory / 1e9:.1f} GB)")
+    else:
+        print(f"No patch needed (total_mem exists)")
+
 
 # ============================================================================
 # SECTION 1: Clone repo and set up directories
