@@ -35,9 +35,19 @@ import sys
 def install(pkg):
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", pkg])
 
-# DON'T upgrade ultralytics — use Kaggle's pre-installed version
-# which is compiled for P100 (CUDA compute 6.0)
-# install("ultralytics")  # SKIP — Kaggle already has it
+# Install ultralytics WITHOUT upgrading torch/torchvision (Kaggle's are P100-compatible)
+subprocess.check_call([
+    sys.executable, "-m", "pip", "install", "-q",
+    "--no-deps", "ultralytics"
+])
+# Install ultralytics' non-torch dependencies
+subprocess.check_call([
+    sys.executable, "-m", "pip", "install", "-q",
+    "opencv-python", "pyyaml", "requests", "tqdm",
+    "matplotlib", "pandas", "seaborn", "psutil", "py-cpuinfo",
+    "ultralytics-thop",
+])
+
 
 print("Packages installed.")
 
