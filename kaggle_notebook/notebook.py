@@ -35,23 +35,20 @@ import sys
 def install(pkg):
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", pkg])
 
-# Pin ultralytics to version compatible with Kaggle's PyTorch
-install("ultralytics==8.3.40")
+# DON'T upgrade ultralytics — use Kaggle's pre-installed version
+# which is compiled for P100 (CUDA compute 6.0)
+# install("ultralytics")  # SKIP — Kaggle already has it
 
 print("Packages installed.")
 
-# Monkey-patch PyTorch CUDA device properties for compatibility
-# Kaggle's PyTorch uses 'total_memory' but newer ultralytics expects 'total_mem'
+# Check what ultralytics version Kaggle has
+import ultralytics
+print(f"Ultralytics version: {ultralytics.__version__}")
 import torch
+print(f"PyTorch version: {torch.__version__}")
+print(f"CUDA available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
-    props = torch.cuda.get_device_properties(0)
-    if not hasattr(props.__class__, 'total_mem') and hasattr(props, 'total_memory'):
-        torch._C._CudaDeviceProperties.total_mem = property(
-            lambda self: self.total_memory
-        )
-        print(f"Patched total_mem -> total_memory ({props.total_memory / 1e9:.1f} GB)")
-    else:
-        print(f"No patch needed (total_mem exists)")
+    print(f"GPU: {torch.cuda.get_device_name(0)}")
 
 
 # ============================================================================
