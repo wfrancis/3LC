@@ -55,6 +55,12 @@ print(f"CUDA available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
     print(f"GPU: {torch.cuda.get_device_name(0)}")
 
+# Disable ray to avoid conflict with ultralytics on Kaggle
+import sys as _sys
+_sys.modules["ray"] = type(_sys)("ray")
+_sys.modules["ray.tune"] = type(_sys)("ray.tune")
+_sys.modules["ray.train"] = type(_sys)("ray.train")
+
 
 # ============================================================================
 # SECTION 1: Clone repo and set up directories
