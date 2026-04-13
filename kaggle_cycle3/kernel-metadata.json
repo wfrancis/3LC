@@ -1,6 +1,6 @@
 {
-  "id": "wbfranci/3lc-vehicle-detection-overnight",
-  "title": "3LC Vehicle Detection - Overnight 300ep",
+  "id": "wbfranci/3lc-cycle4-50ep",
+  "title": "3LC Cycle 4 - 50ep with 3623 fixes",
   "code_file": "notebook.py",
   "language": "python",
   "kernel_type": "script",
