@@ -710,9 +710,10 @@ model = YOLO("yolov8n.yaml")  # architecture definition, no pretrained weights
 
 results = model.train(
     data=str(dataset_yaml_path),
-    epochs=120,
+    epochs=50,
     imgsz=640,
     batch=32,
+    cache="ram",
     device=0,
     workers=4,
     # Learning rate — from scratch needs higher lr0 and aggressive decay

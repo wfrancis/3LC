@@ -1,0 +1,13 @@
+{
+  "id": "wbfranci/3lc-vehicle-detection-clean-v1",
+  "title": "3LC Vehicle Detection - Clean v1",
+  "code_file": "notebook.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "competition_sources": ["3-lc-multi-vehicle-detection-challenge"],
+  "dataset_sources": [],
+  "accelerator": "nvidiaTeslaT4"
+}
