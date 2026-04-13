@@ -39,6 +39,18 @@
 - Killed 2 training runs for being too short/dirty — wasted time
 - **Rule**: Start with 20 epochs. Can always stop early if converged, but can't get time back from too-short runs.
 
+## 2026-04-12: Kaggle environment is painful — test locally first
+- Took 15 kernel versions to get training working on Kaggle
+- Issues: data path nesting, PyTorch CUDA compatibility (P100 sm_60 dropped in cu128), 
+  ultralytics version conflicts, ray library conflicts, total_mem vs total_memory
+- **Rule**: Test the script end-to-end locally on CPU with 1 epoch before pushing to Kaggle
+- **Rule**: Use PyTorch cu118 for P100 compatibility, mock ray module, search multiple paths
+
+## 2026-04-12: Submit early with whatever you have
+- Submitted with 12-epoch local model (0.649) while waiting for 50-epoch Kaggle run
+- Getting on the board gives real feedback. Waiting for perfection wastes time.
+- **Rule**: Submit the moment you have ANY trained model. Iterate from there.
+
 ## 2026-04-12: Use subagents for parallel analysis
 - While GPU is busy training, CPU-bound analysis can run in parallel
 - Data distribution analysis, label statistics, issue detection — all parallelizable

@@ -1,0 +1,12 @@
+{
+  "id": "wbfranci/3lc-vehicle-detection-overnight",
+  "title": "3LC Vehicle Detection - Overnight 300ep",
+  "code_file": "notebook.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "competition_sources": ["3-lc-multi-vehicle-detection-challenge"],
+  "dataset_sources": []
+}
